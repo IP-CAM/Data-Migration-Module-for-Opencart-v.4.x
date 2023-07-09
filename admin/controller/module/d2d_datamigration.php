@@ -151,6 +151,7 @@ class D2dDatamigration extends \Opencart\System\Engine\Controller {
                     \D2dInit::PROCESS_IMPORT,
                     \D2dInit::PROCESS_RESUME,
                     \D2dInit::PROCESS_REFRESH,
+                    \D2dInit::PROCESS_AUTH,
                     \D2dInit::PROCESS_FINISH))){
                 $this->responseJson(array(
                     'status' => 'error',
