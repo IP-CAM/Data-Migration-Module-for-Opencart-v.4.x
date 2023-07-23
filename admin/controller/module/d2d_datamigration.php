@@ -382,12 +382,13 @@ class D2dDatamigration extends \Opencart\System\Engine\Controller {
      */
 
     public function getLibraryLocation(){
-        return '/' . self::EXTENSION_PACKAGE . '/system/library/' . self::EXTENSION_MODULE;
+        $extension_location = str_replace(DIR_OPENCART, '', DIR_EXTENSION);
+        return $extension_location . self::EXTENSION_PACKAGE . '/system/library/' . self::EXTENSION_MODULE;
     }
 
     protected function getLibraryFolder(){
         $location = $this->getLibraryLocation();
-        $folder = DIR_EXTENSION . $location;
+        $folder = DIR_OPENCART . $location;
         return $folder;
     }
 
@@ -467,11 +468,27 @@ class D2dDatamigration extends \Opencart\System\Engine\Controller {
         $config = array();
         $config['user_id'] = $user_id;
         $config['upload_dir'] = $library_folder . '/files';
-        $config['upload_location'] = $library_folder . '/files';
+        $config['upload_location'] = $this->getLibraryLocation() . '/files';
         $config['log_dir'] = $library_folder . '/log';
         $app->setConfig($config);
+        $app->setPluginManager($this);
         $this->migrationApp = $app;
         return $this->migrationApp;
+    }
+
+    public function getPlugin($name){
+        $library_folder = $this->getLibraryFolder();
+        $path = $library_folder . '/plugins/' . $name . '.php';
+        if(!file_exists($path)){
+            return false;
+        }
+        require_once $path;
+        $class_name = 'D2dDataMigrationPlugin' . $name;
+        if(!class_exists($class_name)){
+            return false;
+        }
+        $class = new $class_name();
+        return $class;
     }
 
     /*
