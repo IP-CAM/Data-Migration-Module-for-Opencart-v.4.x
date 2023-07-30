@@ -30,12 +30,11 @@ class D2dDataMigrationPluginExcel
             );
         }
         try {
-            if(!class_exists('PhpOffice\PhpSpreadsheet\Spreadsheet')){
+            if(!class_exists('\\PhpOffice\\PhpSpreadsheet\\Spreadsheet')){
                 include_once dirname(__FILE__) . '/../PhpSpreadsheet/PhpSpreadsheet.php';
             }
-            $class_name = 'PhpOffice\PhpSpreadsheet\IOFactory';
             /* @var $excelReader \PhpOffice\PhpSpreadsheet\Reader\Xlsx */
-            $excelReader = $class_name::createReaderForFile($file_path);
+            $excelReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file_path);
             $spreadsheet = $excelReader->load($file_path);
             /* @var $sheet \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet */
             $sheet = $spreadsheet->getSheet($sheet_index);
